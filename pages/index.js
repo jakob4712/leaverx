@@ -1,72 +1,203 @@
 import Link from 'next/link';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
+import { Icon } from '@/components/Icon';
 
 const STEPS = [
-  { n: 1, t: 'Tell Us About Your Situation', d: 'Complete a secure intake form about your medical condition and leave needs (5–7 min).' },
-  { n: 2, t: 'Upload Documentation', d: 'Provide any existing medical records, doctor’s notes, or diagnosis documentation.' },
-  { n: 3, t: 'Physician Review', d: 'A licensed physician reviews your case and completes DOL Form WH-380.' },
-  { n: 4, t: 'Get Your Certification', d: 'Receive your signed FMLA certification form, ready to submit to your employer.' },
+  { n: '01', icon: 'doc', t: 'Share your situation', d: 'Complete a guided intake about your condition, work, and leave dates. Designed by physicians to capture only what is clinically necessary — 5 to 7 minutes.' },
+  { n: '02', icon: 'shield', t: 'Upload supporting records', d: 'Office notes, imaging, surgical reports, or prior provider letters. Encrypted end-to-end. Optional but strengthens certification.' },
+  { n: '03', icon: 'stethoscope', t: 'Licensed physician review', d: 'A U.S. board-certified physician reviews your case, evaluates clinical evidence, and completes DOL Form WH-380.' },
+  { n: '04', icon: 'check', t: 'Certification delivered', d: 'Download your signed FMLA certification. Submit directly to HR. Employer-ready, federally recognized, legally binding.' },
 ];
 
-const PHYSICAL = ['Post-surgical recovery','Chronic back pain / spinal conditions','Heart conditions / cardiac recovery','Cancer treatment','Pregnancy and prenatal complications','Severe injuries / fractures','Autoimmune disorders (lupus, MS, RA)','Diabetes complications','Respiratory conditions (COPD, severe asthma)','Migraines / chronic headaches'];
-const MENTAL = ['Major depression','Generalized anxiety disorder','PTSD / trauma','Bipolar disorder','Panic disorder','Burnout / adjustment disorder','Substance abuse treatment'];
-const FAMILY = ['Caring for spouse with serious health condition','Caring for child with serious health condition','Caring for parent with serious health condition'];
+const REASONS = [
+  { icon: 'clock', t: '24-hour turnaround', d: 'Most certifications are completed within a single business day. Expedited option delivers same day.' },
+  { icon: 'shield', t: 'HIPAA-compliant by design', d: 'End-to-end encryption, audited access controls, and a records policy that only retains what’s required.' },
+  { icon: 'stethoscope', t: 'Board-certified physicians', d: 'U.S.-licensed MDs and DOs in internal medicine, family medicine, and psychiatry — not nurse practitioners overseas.' },
+  { icon: 'doc', t: 'Federal DOL Form WH-380', d: 'We complete the exact form your employer is required by law to accept. No substitutes. No ambiguity.' },
+  { icon: 'heart', t: 'Full refund guarantee', d: 'If the physician cannot clinically certify your condition, you pay nothing. No fine print.' },
+  { icon: 'lock', t: 'Never shared with your employer', d: 'Your medical details stay with us. Your employer only receives the completed certification form.' },
+];
+
+const CONDITIONS = {
+  physical: ['Post-surgical recovery', 'Chronic spinal conditions', 'Cardiac recovery', 'Oncology treatment', 'Pregnancy complications', 'Severe injuries & fractures', 'Autoimmune disorders', 'Diabetes complications', 'Respiratory conditions', 'Chronic migraines'],
+  mental: ['Major depressive disorder', 'Generalized anxiety', 'PTSD & acute trauma', 'Bipolar disorder', 'Panic disorder', 'Burnout & adjustment disorder', 'Substance-use treatment'],
+  family: ['Spouse with serious condition', 'Child with serious condition', 'Parent requiring care'],
+};
 
 const PLANS = [
-  { name: 'Standard FMLA Certification', price: '$149', d: 'Physician review + signed DOL Form WH-380. 24–48 hour turnaround.', popular: true },
-  { name: 'Expedited (Same-Day)', price: '$199', d: 'Priority review, certification delivered same day.' },
-  { name: 'Family Member FMLA', price: '$149', d: 'Form WH-380-F for caring for a family member.' },
-  { name: 'Recertification', price: '$99', d: 'If your employer requests an updated certification.' },
+  { name: 'Standard', price: '149', unit: 'one-time', d: 'Physician review and DOL Form WH-380. 24–48 hour turnaround.', popular: false },
+  { name: 'Expedited', price: '199', unit: 'one-time', d: 'Priority physician review. Same-day certification delivery.', popular: true },
+  { name: 'Family leave', price: '149', unit: 'one-time', d: 'Form WH-380-F to care for a spouse, child, or parent.', popular: false },
+  { name: 'Recertification', price: '99', unit: 'one-time', d: 'Updated certification when HR requests follow-up documentation.', popular: false },
 ];
 
 const TESTIMONIALS = [
-  { q: 'I needed FMLA for my back surgery recovery. My doctor couldn’t see me for 3 weeks. LeaveRx had my form signed in 18 hours.', a: 'K.M., Houston TX' },
-  { q: 'Going through a rough patch with depression and anxiety. Couldn’t face going to a doctor’s office. LeaveRx made it possible to get the documentation I needed from home.', a: 'S.R., Chicago IL' },
-  { q: 'My HR department kept asking for additional documentation. LeaveRx handled the recertification in one day. Lifesaver.', a: 'J.P., Atlanta GA' },
+  { q: 'My surgeon couldn’t see me for three weeks. LeaveRx had my FMLA form signed in eighteen hours. HR accepted it without a single follow-up question.', a: 'K.M.', r: 'Logistics · Houston, TX' },
+  { q: 'I was struggling with severe anxiety and the idea of sitting in a waiting room was unbearable. LeaveRx let me get the documentation I needed from home, with dignity.', a: 'S.R.', r: 'Software · Chicago, IL' },
+  { q: 'Recertification used to mean another two weeks of chasing my PCP. LeaveRx turned it around in a day. It genuinely protected my job.', a: 'J.P.', r: 'Finance · Atlanta, GA' },
 ];
 
 const FAQS = [
-  { q: 'What is FMLA?', a: 'The Family and Medical Leave Act (FMLA) is a federal law that entitles eligible employees to take up to 12 weeks of unpaid, job-protected leave per year for qualifying medical and family reasons, with continued group health insurance coverage.' },
-  { q: 'Do I qualify for FMLA leave?', a: 'You generally qualify if you’ve worked for a covered employer for at least 12 months, have worked at least 1,250 hours over the past 12 months, and your employer has 50+ employees within 75 miles of your worksite.' },
-  { q: 'What form does my employer need?', a: 'Most employers require the DOL Form WH-380-E (for your own serious health condition) or WH-380-F (to care for a family member). We complete either form for you.' },
-  { q: 'How does the physician review work?', a: 'After you submit your intake and any supporting records, a licensed, board-certified physician reviews your clinical information and completes the FMLA form based on your documented condition.' },
-  { q: 'Is this legitimate? Will my employer accept it?', a: 'Yes. DOL Form WH-380 is the federal standard. Employers are legally required to accept a properly completed form signed by any licensed healthcare provider.' },
-  { q: 'What if the physician can’t certify my condition?', a: 'If certification is not clinically supported, you receive a full refund. No questions asked.' },
-  { q: 'How long is the certification valid?', a: 'FMLA certifications are typically valid for the duration of the specified leave. Employers may request recertification every 30 days in some cases.' },
-  { q: 'Can I use this for intermittent FMLA leave?', a: 'Yes. Our physicians can document continuous, intermittent, or reduced-schedule leave as clinically appropriate.' },
-  { q: 'Is my medical information private?', a: 'Absolutely. LeaveRx is HIPAA-compliant. Your records are encrypted in transit and at rest, and only shared with the reviewing physician.' },
-  { q: 'Do I need existing medical records?', a: 'Records are not strictly required, but they significantly improve the likelihood and speed of certification. If you don’t have records, our physician may request a brief follow-up.' },
+  { q: 'Is this legitimate? Will my employer actually accept it?', a: 'Yes. DOL Form WH-380 is the federal standard required by the U.S. Department of Labor. When signed by a licensed physician, your employer is legally obligated to accept it under 29 CFR § 825.306.' },
+  { q: 'Do I qualify for FMLA leave in the first place?', a: 'You generally qualify if you have worked for a covered employer for at least 12 months, have logged at least 1,250 hours in the past year, and your employer has 50 or more employees within a 75-mile radius of your worksite.' },
+  { q: 'What if the physician cannot certify my condition?', a: 'You receive an immediate, full refund. No deductions, no questions, no documentation required on your end.' },
+  { q: 'How does the physician review actually work?', a: 'A U.S. board-certified physician reviews your intake responses, medical records, and clinical history. They then complete, attest to, and e-sign the DOL Form WH-380 based on established FMLA criteria.' },
+  { q: 'Is my medical information shared with my employer?', a: 'Never. Your employer receives only the completed certification form. Your symptoms, diagnosis details, and records remain between you and the reviewing physician.' },
+  { q: 'Can I use this for intermittent or reduced-schedule leave?', a: 'Yes. Our physicians regularly document continuous, intermittent, and reduced-schedule leave arrangements based on clinical appropriateness.' },
+  { q: 'How long is an FMLA certification valid?', a: 'Certifications are valid for the duration of the leave specified by your physician. Employers may request recertification every 30 days in limited circumstances.' },
+  { q: 'Do I need to have existing medical records to qualify?', a: 'Existing records are not strictly required, but they meaningfully improve both speed and likelihood of certification. Without records, a brief clinical follow-up may be required.' },
 ];
 
 export default function Home() {
   return (
-    <div className="bg-white">
+    <div className="bg-bone text-ink">
       <Nav />
 
-      {/* Hero */}
+      {/* HERO */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-warm-gray via-white to-white" />
-        <div className="container-x relative pt-20 pb-24 md:pt-28 md:pb-32">
-          <div className="max-w-3xl">
-            <div className="chip mb-6">
-              <span className="w-2 h-2 rounded-full bg-accent-green" /> Same-day certifications available
+        <div className="absolute inset-0 grain opacity-60" />
+        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-sage/60 blur-3xl" />
+        <div className="container-wide relative pt-20 md:pt-28 pb-24 md:pb-36">
+          <div className="grid lg:grid-cols-12 gap-12 items-end">
+            <div className="lg:col-span-8">
+              <div className="eyebrow mb-8">Telehealth FMLA Certification</div>
+              <h1 className="display text-5xl md:text-7xl lg:text-[92px] leading-[0.98] text-balance">
+                Medical leave,<br />
+                <span className="text-ink/30">certified by a doctor.</span><br />
+                <span className="italic font-normal">Without the office visit.</span>
+              </h1>
+              <p className="mt-10 text-lg md:text-xl text-ink/70 leading-relaxed max-w-2xl text-pretty">
+                A licensed U.S. physician reviews your case and completes your FMLA Certification of Health Care Provider (DOL Form WH-380) — usually within 24 hours. Private, federally recognized, refunded if we can’t certify.
+              </p>
+              <div className="mt-10 flex flex-wrap items-center gap-4">
+                <Link href="/intake" className="btn-primary !px-7 !py-4 text-[15px]">
+                  Start evaluation — $149 <Icon name="arrow" className="w-4 h-4" />
+                </Link>
+                <a href="#how" className="btn-secondary !px-7 !py-4 text-[15px]">See how it works</a>
+              </div>
+              <div className="mt-10 flex items-center gap-3 text-[13px] text-ink/60">
+                <div className="flex">
+                  {[1,2,3,4,5].map(i => <Icon key={i} name="star" className="w-4 h-4 text-teal" />)}
+                </div>
+                <span className="font-semibold text-ink">4.8 / 5</span>
+                <span className="text-ink/30">·</span>
+                <span>2,500+ certifications delivered</span>
+              </div>
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold text-navy leading-[1.05]">
-              Get your FMLA paperwork signed by a doctor. <span className="text-soft-blue">Today.</span>
-            </h1>
-            <p className="mt-6 text-lg md:text-xl text-navy/75 leading-relaxed max-w-2xl">
-              Need medical leave from work? A licensed physician reviews your case and completes your FMLA certification form — no office visit, no 2-week wait, no $300 copay.
+
+            <div className="lg:col-span-4 space-y-3">
+              <TrustStat label="Average turnaround" value="under 24h" icon="clock" />
+              <TrustStat label="Full refund if not certified" value="100%" icon="shield" />
+              <TrustStat label="Licensed in all U.S. states" value="50 / 50" icon="stethoscope" />
+              <TrustStat label="HIPAA-compliant platform" value="Encrypted" icon="lock" />
+            </div>
+          </div>
+        </div>
+        <div className="rule mx-auto container-wide" />
+      </section>
+
+      {/* BADGE STRIP */}
+      <section className="border-b border-line bg-bone">
+        <div className="container-wide py-10 flex flex-wrap items-center justify-between gap-x-10 gap-y-6 text-[12px] uppercase tracking-[0.18em] text-ink/50">
+          <span>Board-Certified Physicians</span>
+          <span className="hidden sm:block">·</span>
+          <span>HIPAA Compliant</span>
+          <span className="hidden sm:block">·</span>
+          <span>DOL Form WH-380</span>
+          <span className="hidden sm:block">·</span>
+          <span>Same-Day Available</span>
+          <span className="hidden sm:block">·</span>
+          <span>All 50 States</span>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section id="how" className="container-wide py-28 md:py-36">
+        <div className="grid md:grid-cols-12 gap-10 mb-16 md:mb-24 items-end">
+          <div className="md:col-span-7">
+            <div className="eyebrow mb-6">01 / The Process</div>
+            <h2 className="display text-4xl md:text-6xl leading-[1] text-balance">
+              Four steps between you<br />and your certification.
+            </h2>
+          </div>
+          <div className="md:col-span-5 md:pl-10">
+            <p className="text-ink/65 text-[17px] leading-relaxed">
+              We built LeaveRx to remove every unnecessary step from the FMLA process — without compromising clinical rigor. No waiting rooms, no phone trees, no weeks of back-and-forth.
             </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link href="/intake" className="btn-primary">Start — $149</Link>
-              <a href="#how" className="btn-secondary">How it works</a>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-line rounded-3xl overflow-hidden border border-line">
+          {STEPS.map(s => (
+            <div key={s.n} className="bg-bone p-8 lg:p-10">
+              <div className="flex items-start justify-between">
+                <span className="num-rule">{s.n}</span>
+                <Icon name={s.icon} className="w-6 h-6 text-teal" />
+              </div>
+              <h3 className="display text-xl mt-10">{s.t}</h3>
+              <p className="mt-3 text-[15px] text-ink/65 leading-relaxed">{s.d}</p>
             </div>
-            <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm text-navy/70">
-              {['Board-Certified Physicians','Same-Day Available','HIPAA Compliant','Full Refund if Not Certified'].map(t => (
-                <div key={t} className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-accent-green" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-8 8a1 1 0 01-1.4 0l-4-4a1 1 0 111.4-1.4L8 12.6l7.3-7.3a1 1 0 011.4 0z" clipRule="evenodd"/></svg>
-                  {t}
+          ))}
+        </div>
+      </section>
+
+      {/* REASONS */}
+      <section className="bg-mist border-y border-line">
+        <div className="container-wide py-28 md:py-36">
+          <div className="grid md:grid-cols-12 gap-10 mb-16 items-end">
+            <div className="md:col-span-7">
+              <div className="eyebrow mb-6">02 / Why LeaveRx</div>
+              <h2 className="display text-4xl md:text-6xl leading-[1]">Built for real medical legitimacy.</h2>
+            </div>
+            <p className="md:col-span-5 md:pl-10 text-ink/65 text-[17px] leading-relaxed">
+              LeaveRx is not a form-mill. Every certification is a clinical decision made by a licensed U.S. physician, delivered on the federal DOL form your employer is obligated to accept.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {REASONS.map(r => (
+              <div key={r.t} className="card card-hover">
+                <div className="w-11 h-11 rounded-xl bg-sage flex items-center justify-center text-teal">
+                  <Icon name={r.icon} className="w-5 h-5" />
+                </div>
+                <h3 className="display text-[19px] mt-6">{r.t}</h3>
+                <p className="mt-2 text-[14.5px] text-ink/65 leading-relaxed">{r.d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PRIVACY */}
+      <section id="privacy" className="bg-ink text-bone relative overflow-hidden">
+        <div className="absolute inset-0 grain opacity-10" />
+        <div className="container-wide py-28 md:py-36 relative">
+          <div className="grid md:grid-cols-12 gap-10 items-start">
+            <div className="md:col-span-6">
+              <div className="eyebrow !text-bone/40 mb-6 before:!bg-bone/30">03 / Confidentiality</div>
+              <h2 className="display text-4xl md:text-6xl leading-[1] text-balance">
+                Your records are yours. <span className="text-bone/40 italic font-normal">Always.</span>
+              </h2>
+              <p className="mt-8 text-bone/70 text-[17px] leading-relaxed max-w-xl">
+                We built LeaveRx with the privacy sensitivity that medical leave deserves. Your employer never sees your symptoms, diagnosis, records, or session notes — only the federally required certification form.
+              </p>
+              <Link href="/legal/hipaa" className="mt-8 inline-flex items-center gap-2 text-bone link-underline text-[14px]">
+                Read our HIPAA Notice <Icon name="arrow" className="w-4 h-4" />
+              </Link>
+            </div>
+            <div className="md:col-span-6 md:pl-10 space-y-5">
+              {[
+                ['End-to-end encryption', 'TLS 1.3 in transit. AES-256 at rest. Records accessible only to the reviewing physician.'],
+                ['Minimum-necessary data', 'We collect only what is clinically and legally required. Nothing else touches our servers.'],
+                ['No employer disclosure', 'HR receives Form WH-380 only. Your medical details never leave our platform.'],
+                ['Right to delete', 'You can request deletion of your records at any time, for any reason.'],
+              ].map(([t,d]) => (
+                <div key={t} className="flex gap-4 pb-5 border-b border-bone/10">
+                  <div className="text-teal-2 pt-1"><Icon name="check" className="w-5 h-5" /></div>
+                  <div>
+                    <h4 className="display text-[17px] text-bone">{t}</h4>
+                    <p className="text-bone/60 text-[14px] mt-1 leading-relaxed">{d}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -74,193 +205,259 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="border-y border-navy/5 bg-warm-gray/60">
-        <div className="container-x py-10 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          {[['2,500+','Certifications completed'],['4.8/5','Patient rating'],['24hr','Avg turnaround'],['All 50','States served']].map(([n,l]) => (
-            <div key={l}>
-              <div className="font-heading font-bold text-3xl md:text-4xl text-navy">{n}</div>
-              <div className="text-xs md:text-sm text-navy/60 mt-1">{l}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* How */}
-      <section id="how" className="container-x py-24">
-        <div className="max-w-2xl mb-12">
-          <div className="chip mb-4">How it works</div>
-          <h2 className="text-3xl md:text-5xl font-bold text-navy">Four steps. Zero office visits.</h2>
-        </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {STEPS.map(s => (
-            <div key={s.n} className="card">
-              <div className="w-10 h-10 rounded-xl bg-navy text-white flex items-center justify-center font-bold font-heading">{s.n}</div>
-              <h3 className="mt-4 font-bold text-lg text-navy">{s.t}</h3>
-              <p className="mt-2 text-sm text-navy/70 leading-relaxed">{s.d}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* What is FMLA */}
-      <section className="bg-navy text-white">
-        <div className="container-x py-20 grid md:grid-cols-5 gap-10 items-center">
-          <div className="md:col-span-2">
-            <div className="chip !bg-white/10 !text-white mb-4">Federal Law</div>
-            <h2 className="text-3xl md:text-4xl font-bold">What is FMLA?</h2>
+      {/* MEDICAL REVIEW */}
+      <section className="container-wide py-28 md:py-36">
+        <div className="grid md:grid-cols-12 gap-10 mb-16 items-end">
+          <div className="md:col-span-7">
+            <div className="eyebrow mb-6">04 / Clinical Process</div>
+            <h2 className="display text-4xl md:text-6xl leading-[1] text-balance">Reviewed by physicians. Not algorithms.</h2>
           </div>
-          <p className="md:col-span-3 text-white/80 text-lg leading-relaxed">
-            The Family and Medical Leave Act (FMLA) entitles eligible employees to take up to <strong className="text-white">12 weeks of unpaid, job-protected leave</strong> per year for qualifying medical conditions. Your employer requires a Certification of Health Care Provider (<strong className="text-white">DOL Form WH-380-E</strong>) signed by a licensed physician. We handle that for you.
+          <p className="md:col-span-5 md:pl-10 text-ink/65 text-[17px] leading-relaxed">
+            Every LeaveRx case is reviewed by a U.S. board-certified physician in internal medicine, family medicine, or psychiatry. No AI-only approvals. No overseas prescribers. No shortcuts.
           </p>
         </div>
+
+        <div className="grid md:grid-cols-5 gap-5">
+          <div className="md:col-span-3 card">
+            <div className="eyebrow mb-5">Physician panel</div>
+            <h3 className="display text-2xl">Independently licensed. Accountable.</h3>
+            <p className="mt-4 text-ink/65 text-[15px] leading-relaxed max-w-lg">
+              Our physicians carry active state medical licenses, maintain board certification, and are individually responsible for every case they sign. They are not employees of LeaveRx — they practice independently on the platform.
+            </p>
+            <div className="mt-8 grid grid-cols-3 gap-4">
+              {[['MD & DO', 'Credentials'], ['Board', 'Certified'], ['50', 'States']].map(([a,b]) => (
+                <div key={b} className="pt-4 border-t border-line">
+                  <div className="display text-2xl">{a}</div>
+                  <div className="text-[11px] uppercase tracking-[0.18em] text-ink/50 mt-1">{b}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="md:col-span-2 card bg-sage border-sage-2">
+            <div className="eyebrow mb-5">What the physician does</div>
+            <ul className="space-y-4 text-[14.5px] text-ink/80">
+              {[
+                'Reviews your intake and records',
+                'Evaluates against FMLA clinical criteria',
+                'Determines duration and schedule type',
+                'Completes and e-signs DOL Form WH-380',
+                'Attests to clinical accuracy',
+              ].map(x => (
+                <li key={x} className="flex gap-3">
+                  <span className="text-teal mt-0.5"><Icon name="check" className="w-4 h-4" /></span>
+                  <span>{x}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </section>
 
-      {/* Conditions */}
-      <section id="conditions" className="container-x py-24">
-        <div className="max-w-2xl mb-12">
-          <div className="chip mb-4">Qualifying conditions</div>
-          <h2 className="text-3xl md:text-5xl font-bold text-navy">If it affects your ability to work, we can likely certify it.</h2>
-        </div>
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="card">
-            <h3 className="font-bold text-navy text-lg">Physical Health</h3>
-            <ul className="mt-4 space-y-2 text-sm text-navy/75">
-              {PHYSICAL.map(c => <li key={c} className="flex gap-2"><span className="text-accent-green">•</span>{c}</li>)}
-            </ul>
+      {/* CONDITIONS */}
+      <section id="conditions" className="bg-mist border-y border-line">
+        <div className="container-wide py-28 md:py-36">
+          <div className="grid md:grid-cols-12 gap-10 mb-16 items-end">
+            <div className="md:col-span-7">
+              <div className="eyebrow mb-6">05 / Qualifying Conditions</div>
+              <h2 className="display text-4xl md:text-6xl leading-[1] text-balance">
+                If it stops you from working, it likely qualifies.
+              </h2>
+            </div>
+            <p className="md:col-span-5 md:pl-10 text-ink/65 text-[17px] leading-relaxed">
+              FMLA covers any serious health condition — physical or mental — that prevents you from performing essential job functions. Here are the categories we see most often.
+            </p>
           </div>
-          <div className="card">
-            <h3 className="font-bold text-navy text-lg">Mental Health</h3>
-            <ul className="mt-4 space-y-2 text-sm text-navy/75">
-              {MENTAL.map(c => <li key={c} className="flex gap-2"><span className="text-accent-green">•</span>{c}</li>)}
-            </ul>
-          </div>
-          <div className="card">
-            <h3 className="font-bold text-navy text-lg">Family Member Care <span className="text-xs font-normal text-navy/50">(WH-380-F)</span></h3>
-            <ul className="mt-4 space-y-2 text-sm text-navy/75">
-              {FAMILY.map(c => <li key={c} className="flex gap-2"><span className="text-accent-green">•</span>{c}</li>)}
-            </ul>
+
+          <div className="grid md:grid-cols-3 gap-5">
+            <ConditionCard icon="pulse" title="Physical health" sub="Form WH-380-E" items={CONDITIONS.physical} />
+            <ConditionCard icon="brain" title="Mental health" sub="Form WH-380-E" items={CONDITIONS.mental} />
+            <ConditionCard icon="users" title="Family member care" sub="Form WH-380-F" items={CONDITIONS.family} />
           </div>
         </div>
       </section>
 
-      {/* Pricing */}
-      <section id="pricing" className="bg-warm-gray">
-        <div className="container-x py-24">
-          <div className="max-w-2xl mb-12">
-            <div className="chip mb-4">Pricing</div>
-            <h2 className="text-3xl md:text-5xl font-bold text-navy">Flat fee. No insurance needed.</h2>
-            <p className="mt-4 text-navy/70">All plans include full refund if not certified.</p>
+      {/* COMPARISON */}
+      <section className="container-wide py-28 md:py-36">
+        <div className="grid md:grid-cols-12 gap-10 mb-16 items-end">
+          <div className="md:col-span-8">
+            <div className="eyebrow mb-6">06 / The Alternative</div>
+            <h2 className="display text-4xl md:text-6xl leading-[1] text-balance">A better option than waiting three weeks.</h2>
           </div>
+        </div>
+        <div className="rounded-3xl border border-line overflow-hidden bg-bone">
+          <div className="grid grid-cols-4 text-[12px] uppercase tracking-[0.18em] text-ink/50 border-b border-line">
+            <div className="p-6"></div>
+            <div className="p-6 bg-sage text-ink font-semibold">LeaveRx</div>
+            <div className="p-6">Your Doctor</div>
+            <div className="p-6">Urgent Care</div>
+          </div>
+          {[
+            ['Price', '$149 flat', '$150–$300 + copay', '$200–$350'],
+            ['Turnaround', '24 hours', '2–4 weeks for appt', 'Same day, in-person'],
+            ['Office visit', 'Not required', 'Required', 'Required'],
+            ['Form completed for you', 'Yes', 'Sometimes', 'Rarely'],
+            ['Refund if not certified', 'Full refund', 'No', 'No'],
+            ['FMLA specialty', 'Yes', 'No', 'No'],
+          ].map((row, i) => (
+            <div key={row[0]} className={`grid grid-cols-4 text-[14.5px] ${i !== 0 ? 'border-t border-line' : ''}`}>
+              <div className="p-6 font-semibold text-ink/80">{row[0]}</div>
+              <div className="p-6 bg-sage/40 text-ink font-semibold">{row[1]}</div>
+              <div className="p-6 text-ink/60">{row[2]}</div>
+              <div className="p-6 text-ink/60">{row[3]}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* PRICING */}
+      <section id="pricing" className="bg-mist border-y border-line">
+        <div className="container-wide py-28 md:py-36">
+          <div className="grid md:grid-cols-12 gap-10 mb-16 items-end">
+            <div className="md:col-span-7">
+              <div className="eyebrow mb-6">07 / Pricing</div>
+              <h2 className="display text-4xl md:text-6xl leading-[1]">One fee. No insurance. No surprises.</h2>
+            </div>
+            <p className="md:col-span-5 md:pl-10 text-ink/65 text-[17px] leading-relaxed">
+              Flat pricing. Full refund if the reviewing physician cannot clinically certify your condition.
+            </p>
+          </div>
+
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
             {PLANS.map(p => (
-              <div key={p.name} className={`card relative ${p.popular ? 'ring-2 ring-accent-green' : ''}`}>
-                {p.popular && <div className="absolute -top-3 left-6 text-xs font-bold bg-accent-green text-white px-3 py-1 rounded-full">MOST POPULAR</div>}
-                <div className="font-heading font-bold text-3xl text-navy">{p.price}</div>
-                <h3 className="mt-1 font-bold text-navy">{p.name}</h3>
-                <p className="mt-3 text-sm text-navy/70 leading-relaxed">{p.d}</p>
-                <Link href="/intake" className="mt-6 btn-primary w-full text-sm">Start</Link>
+              <div key={p.name} className={`card card-hover relative flex flex-col ${p.popular ? 'bg-ink text-bone border-ink' : ''}`}>
+                {p.popular && (
+                  <div className="absolute -top-3 left-7 text-[10px] font-semibold uppercase tracking-[0.2em] bg-teal-2 text-ink px-3 py-1.5 rounded-full">Most chosen</div>
+                )}
+                <div className={`eyebrow ${p.popular ? '!text-bone/50 before:!bg-bone/30' : ''}`}>{p.name}</div>
+                <div className="mt-6 flex items-baseline gap-1">
+                  <span className="display text-5xl">${p.price}</span>
+                  <span className={`text-[13px] ${p.popular ? 'text-bone/50' : 'text-ink/50'}`}>/ {p.unit}</span>
+                </div>
+                <p className={`mt-5 text-[14px] leading-relaxed flex-1 ${p.popular ? 'text-bone/70' : 'text-ink/65'}`}>{p.d}</p>
+                <Link href="/intake" className={`mt-8 btn ${p.popular ? 'bg-bone text-ink hover:bg-teal-2' : 'bg-ink text-bone hover:bg-teal'} w-full justify-center text-[14px]`}>
+                  Start evaluation <Icon name="arrow" className="w-4 h-4" />
+                </Link>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Comparison */}
-      <section className="container-x py-24">
-        <div className="max-w-2xl mb-10">
-          <div className="chip mb-4">Compare</div>
-          <h2 className="text-3xl md:text-5xl font-bold text-navy">Why people choose LeaveRx.</h2>
-        </div>
-        <div className="overflow-x-auto card !p-0">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-navy/10 text-left">
-                <th className="p-5"></th>
-                <th className="p-5 font-bold text-navy">LeaveRx</th>
-                <th className="p-5 font-semibold text-navy/70">Your Doctor’s Office</th>
-                <th className="p-5 font-semibold text-navy/70">Urgent Care</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-navy/5">
-              {[
-                ['Price','$149 flat','$150–300 copay','$200–350'],
-                ['Time','24–48 hours','2–4 week wait for appt','Same day but in-person'],
-                ['Visit','No visit needed','In-person required','In-person required'],
-                ['Form completed for you','Yes','Maybe','Rarely'],
-                ['Refund if not certified','Full refund','No','No'],
-              ].map(row => (
-                <tr key={row[0]}>
-                  <td className="p-5 font-semibold text-navy">{row[0]}</td>
-                  <td className="p-5 text-accent-green font-semibold">{row[1]}</td>
-                  <td className="p-5 text-navy/70">{row[2]}</td>
-                  <td className="p-5 text-navy/70">{row[3]}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="bg-warm-gray">
-        <div className="container-x py-24">
-          <div className="max-w-2xl mb-12">
-            <div className="chip mb-4">Patient stories</div>
-            <h2 className="text-3xl md:text-5xl font-bold text-navy">Real people. Real relief.</h2>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {TESTIMONIALS.map(t => (
-              <div key={t.a} className="card">
-                <div className="text-accent-green font-heading text-4xl leading-none">“</div>
-                <p className="text-navy/80 leading-relaxed">{t.q}</p>
-                <div className="mt-6 text-sm font-semibold text-navy/60">— {t.a}</div>
-              </div>
-            ))}
+      {/* TESTIMONIALS */}
+      <section className="container-wide py-28 md:py-36">
+        <div className="grid md:grid-cols-12 gap-10 mb-16 items-end">
+          <div className="md:col-span-7">
+            <div className="eyebrow mb-6">08 / Patient Stories</div>
+            <h2 className="display text-4xl md:text-6xl leading-[1] text-balance">Quiet relief, at the moment it matters.</h2>
           </div>
         </div>
-      </section>
-
-      {/* Employer acceptance */}
-      <section className="container-x py-24">
-        <div className="card bg-navy text-white !p-10 md:!p-14 !border-0">
-          <div className="chip !bg-white/10 !text-white mb-4">Employer acceptance</div>
-          <h2 className="text-2xl md:text-4xl font-bold max-w-3xl">Your employer is legally required to accept a properly completed WH-380.</h2>
-          <p className="mt-5 text-white/80 max-w-3xl leading-relaxed">
-            DOL Form WH-380 is the standard federal form required by the Department of Labor. When signed by a licensed physician, it is legally valid documentation for FMLA leave. Your employer is required by law to accept a properly completed WH-380 form from any licensed healthcare provider.
-          </p>
+        <div className="grid md:grid-cols-3 gap-5">
+          {TESTIMONIALS.map((t, i) => (
+            <figure key={i} className="card flex flex-col">
+              <Icon name="quote" className="w-6 h-6 text-teal" />
+              <blockquote className="mt-5 text-[16px] text-ink/80 leading-relaxed flex-1">“{t.q}”</blockquote>
+              <figcaption className="mt-8 pt-5 border-t border-line">
+                <div className="display text-[15px]">{t.a}</div>
+                <div className="text-[12px] uppercase tracking-[0.15em] text-ink/50 mt-1">{t.r}</div>
+              </figcaption>
+            </figure>
+          ))}
         </div>
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="container-x pb-24">
-        <div className="max-w-2xl mb-10">
-          <div className="chip mb-4">FAQ</div>
-          <h2 className="text-3xl md:text-5xl font-bold text-navy">Questions answered.</h2>
-        </div>
-        <div className="grid md:grid-cols-2 gap-4">
-          {FAQS.map(f => (
-            <details key={f.q} className="card group">
-              <summary className="cursor-pointer list-none flex items-start justify-between gap-4">
-                <span className="font-bold text-navy">{f.q}</span>
-                <span className="text-soft-blue font-heading text-xl group-open:rotate-45 transition">+</span>
-              </summary>
-              <p className="mt-3 text-sm text-navy/75 leading-relaxed">{f.a}</p>
-            </details>
-          ))}
+      <section id="faq" className="bg-mist border-y border-line">
+        <div className="container-wide py-28 md:py-36">
+          <div className="grid md:grid-cols-12 gap-10">
+            <div className="md:col-span-4">
+              <div className="eyebrow mb-6">09 / FAQ</div>
+              <h2 className="display text-4xl md:text-5xl leading-[1]">Everything you need to know.</h2>
+              <p className="mt-6 text-ink/65 text-[15px] leading-relaxed">
+                Still have questions? Email <a href="mailto:support@leaverx.co" className="underline">support@leaverx.co</a> — we respond within the hour during business hours.
+              </p>
+            </div>
+            <div className="md:col-span-8">
+              <div className="border-t border-ink/15">
+                {FAQS.map((f, i) => (
+                  <details key={i} className="group border-b border-ink/15 py-7">
+                    <summary className="flex items-start justify-between gap-6 cursor-pointer list-none">
+                      <span className="display text-[19px] md:text-[22px] text-ink pr-4">{f.q}</span>
+                      <span className="mt-1 flex-shrink-0 w-8 h-8 rounded-full border border-ink/20 flex items-center justify-center text-ink group-open:bg-ink group-open:text-bone transition">
+                        <Icon name="plus" className="w-4 h-4 group-open:hidden" />
+                        <Icon name="minus" className="w-4 h-4 hidden group-open:block" />
+                      </span>
+                    </summary>
+                    <p className="mt-4 text-ink/65 text-[15px] leading-relaxed max-w-2xl">{f.a}</p>
+                  </details>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="container-x pb-24">
-        <div className="rounded-3xl bg-gradient-to-br from-navy to-navy-2 text-white p-10 md:p-16 text-center">
-          <h2 className="text-3xl md:text-5xl font-bold max-w-2xl mx-auto">Ready to get the documentation you need?</h2>
-          <p className="mt-4 text-white/80 max-w-xl mx-auto">Start your intake now. Most certifications completed within 24 hours.</p>
-          <Link href="/intake" className="btn-primary mt-8">Start — $149</Link>
+      {/* FINAL CTA */}
+      <section className="bg-bone">
+        <div className="container-wide py-28 md:py-36">
+          <div className="rounded-[32px] bg-ink text-bone p-10 md:p-20 relative overflow-hidden">
+            <div className="absolute inset-0 grain opacity-10" />
+            <div className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-teal/30 blur-3xl" />
+            <div className="relative max-w-3xl">
+              <div className="eyebrow !text-bone/40 mb-6 before:!bg-bone/30">Start today</div>
+              <h2 className="display text-4xl md:text-6xl lg:text-7xl leading-[1] text-balance">
+                Get your FMLA certification in the time it takes to read this page.
+              </h2>
+              <p className="mt-8 text-bone/70 text-[17px] leading-relaxed max-w-xl">
+                Most cases are certified within 24 hours. Same-day is available. If we can’t certify you, you pay nothing.
+              </p>
+              <div className="mt-10 flex flex-wrap gap-4">
+                <Link href="/intake" className="btn bg-bone text-ink hover:bg-teal-2 !px-7 !py-4">
+                  Start evaluation — $149 <Icon name="arrow" className="w-4 h-4" />
+                </Link>
+                <a href="#pricing" className="btn border border-bone/30 text-bone hover:bg-bone/10 !px-7 !py-4">See pricing</a>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       <Footer />
+    </div>
+  );
+}
+
+function TrustStat({ label, value, icon }) {
+  return (
+    <div className="flex items-center justify-between gap-4 p-5 bg-bone border border-line rounded-2xl hover:border-ink/30 transition">
+      <div className="flex items-center gap-4">
+        <div className="w-10 h-10 rounded-xl bg-sage flex items-center justify-center text-teal">
+          <Icon name={icon} className="w-5 h-5" />
+        </div>
+        <div className="text-[11px] uppercase tracking-[0.16em] text-ink/55">{label}</div>
+      </div>
+      <div className="display text-[15px]">{value}</div>
+    </div>
+  );
+}
+
+function ConditionCard({ icon, title, sub, items }) {
+  return (
+    <div className="card card-hover bg-bone">
+      <div className="flex items-start justify-between">
+        <div className="w-11 h-11 rounded-xl bg-sage flex items-center justify-center text-teal">
+          <Icon name={icon} className="w-5 h-5" />
+        </div>
+        <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-ink/40 border border-line rounded-full px-2.5 py-1">{sub}</span>
+      </div>
+      <h3 className="display text-2xl mt-6">{title}</h3>
+      <ul className="mt-5 space-y-3 text-[14.5px] text-ink/75">
+        {items.map(x => (
+          <li key={x} className="flex gap-3 pb-3 border-b border-line/70 last:border-0 last:pb-0">
+            <span className="text-teal mt-1"><Icon name="check" className="w-3.5 h-3.5" /></span>
+            {x}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

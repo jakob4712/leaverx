@@ -2,48 +2,64 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="bg-navy text-white mt-24">
-      <div className="container-x py-16 grid md:grid-cols-4 gap-10">
-        <div>
-          <div className="mb-4 bg-white rounded-xl inline-block p-3">
-            <img src="/logo.png" alt="LeaveRx" className="h-12 w-auto object-contain" />
+    <footer className="bg-ink text-bone">
+      <div className="container-wide pt-24 pb-10">
+        <div className="grid md:grid-cols-12 gap-12">
+          <div className="md:col-span-4">
+            <div className="bg-bone rounded-2xl inline-block p-4">
+              <img src="/logo.png" alt="LeaveRx" className="h-12 w-auto object-contain" />
+            </div>
+            <p className="mt-6 text-bone/70 text-[15px] leading-relaxed max-w-xs">
+              Physician-signed FMLA certifications, delivered online. Quiet, private, federally recognized.
+            </p>
+            <div className="mt-8 flex items-center gap-3">
+              <span className="text-[11px] uppercase tracking-[0.18em] text-bone/50 border border-bone/20 rounded-full px-3 py-1.5">HIPAA</span>
+              <span className="text-[11px] uppercase tracking-[0.18em] text-bone/50 border border-bone/20 rounded-full px-3 py-1.5">SOC 2</span>
+              <span className="text-[11px] uppercase tracking-[0.18em] text-bone/50 border border-bone/20 rounded-full px-3 py-1.5">256-bit TLS</span>
+            </div>
           </div>
-          <p className="text-white/70 text-sm leading-relaxed">
-            Medical leave certified. No office visit needed.
+
+          <Col title="Product" links={[
+            ['How it works', '/#how'],
+            ['Qualifying conditions', '/#conditions'],
+            ['Pricing', '/#pricing'],
+            ['Start evaluation', '/intake'],
+          ]} />
+          <Col title="Portals" links={[
+            ['Patient portal', '/portal'],
+            ['Clinician portal', '/clinician'],
+          ]} />
+          <Col title="Company" links={[
+            ['Contact', 'mailto:support@leaverx.co'],
+            ['Privacy', '/legal/privacy'],
+            ['Terms', '/legal/terms'],
+            ['HIPAA', '/legal/hipaa'],
+            ['Refund', '/legal/refund'],
+          ]} />
+        </div>
+
+        <div className="mt-20 pt-8 border-t border-bone/10 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+          <p className="text-[11px] text-bone/50 max-w-3xl leading-relaxed">
+            LeaveRx is a HIPAA-compliant telehealth platform. Physicians on LeaveRx make independent clinical decisions. Certification is not guaranteed and depends on the documented clinical evidence of each case. If your condition cannot be certified, you receive a full refund.
           </p>
-          <p className="text-white/60 text-xs mt-4">support@leaverx.co</p>
-        </div>
-        <div>
-          <h4 className="font-semibold mb-4 text-sm uppercase tracking-wider text-white/60">Product</h4>
-          <ul className="space-y-2 text-sm text-white/80">
-            <li><a href="/#how">How it works</a></li>
-            <li><a href="/#pricing">Pricing</a></li>
-            <li><a href="/#conditions">Qualifying conditions</a></li>
-            <li><Link href="/intake">Start intake</Link></li>
-          </ul>
-        </div>
-        <div>
-          <h4 className="font-semibold mb-4 text-sm uppercase tracking-wider text-white/60">Portals</h4>
-          <ul className="space-y-2 text-sm text-white/80">
-            <li><Link href="/portal">Patient portal</Link></li>
-            <li><Link href="/clinician">Clinician portal</Link></li>
-          </ul>
-        </div>
-        <div>
-          <h4 className="font-semibold mb-4 text-sm uppercase tracking-wider text-white/60">Legal</h4>
-          <ul className="space-y-2 text-sm text-white/80">
-            <li><Link href="/legal/privacy">Privacy Policy</Link></li>
-            <li><Link href="/legal/terms">Terms of Service</Link></li>
-            <li><Link href="/legal/hipaa">HIPAA Notice</Link></li>
-            <li><Link href="/legal/refund">Refund Policy</Link></li>
-          </ul>
-        </div>
-      </div>
-      <div className="border-t border-white/10">
-        <div className="container-x py-6 text-xs text-white/60 leading-relaxed">
-          LeaveRx is a HIPAA-compliant telehealth platform. Certification decisions are made by licensed physicians based on clinical evidence. Certification is not guaranteed. © {new Date().getFullYear()} LeaveRx.
+          <p className="text-[11px] text-bone/50">© {new Date().getFullYear()} LeaveRx, Inc.</p>
         </div>
       </div>
     </footer>
+  );
+}
+
+function Col({ title, links }) {
+  return (
+    <div className="md:col-span-2">
+      <h4 className="text-[11px] uppercase tracking-[0.2em] text-bone/50 font-semibold">{title}</h4>
+      <ul className="mt-5 space-y-3 text-[14px]">
+        {links.map(([l, h]) => (
+          <li key={l}>
+            <Link href={h} className="text-bone/85 hover:text-bone link-underline">{l}</Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
