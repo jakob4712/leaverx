@@ -18,9 +18,9 @@ export default function Nav() {
         </div>
       </div>
       <header className="sticky top-0 z-40 bg-bone/85 backdrop-blur-xl border-b border-line">
-        <div className="container-wide flex items-center justify-between h-20">
-          <Link href="/" className="flex items-center">
-            <img src="/logo.png" alt="LeaveRx" className="h-12 w-auto object-contain" />
+        <div className="container-wide flex items-center justify-between h-24">
+          <Link href="/" className="flex items-center -my-4">
+            <img src="/logo.png" alt="LeaveRx" className="h-24 md:h-28 w-auto object-contain" />
           </Link>
           <nav className="hidden md:flex items-center gap-10 text-[14px] font-medium text-ink/75">
             <a href="/#how" className="hover:text-ink transition">How it works</a>

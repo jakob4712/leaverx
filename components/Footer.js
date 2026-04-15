@@ -6,8 +6,8 @@ export default function Footer() {
       <div className="container-wide pt-24 pb-10">
         <div className="grid md:grid-cols-12 gap-12">
           <div className="md:col-span-4">
-            <div className="bg-bone rounded-2xl inline-block p-4">
-              <img src="/logo.png" alt="LeaveRx" className="h-12 w-auto object-contain" />
+            <div className="bg-bone rounded-2xl inline-block p-5">
+              <img src="/logo.png" alt="LeaveRx" className="h-20 w-auto object-contain" />
             </div>
             <p className="mt-6 text-bone/70 text-[15px] leading-relaxed max-w-xs">
               Physician-signed FMLA certifications, delivered online. Quiet, private, federally recognized.
