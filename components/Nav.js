@@ -3,9 +3,9 @@ import Link from 'next/link';
 export default function Nav() {
   return (
     <header className="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-navy/5">
-      <div className="container-x flex items-center justify-between h-16">
+      <div className="container-x flex items-center justify-between h-20">
         <Link href="/" className="flex items-center">
-          <img src="/logo.png" alt="LeaveRx" className="h-10 w-auto" />
+          <img src="/logo.png" alt="LeaveRx" className="h-14 w-auto object-contain" />
         </Link>
         <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-navy/80">
           <a href="/#how">How it works</a>

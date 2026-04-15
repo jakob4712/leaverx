@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="container-x py-16 grid md:grid-cols-4 gap-10">
         <div>
           <div className="mb-4 bg-white rounded-xl inline-block p-3">
-            <img src="/logo.png" alt="LeaveRx" className="h-10 w-auto" />
+            <img src="/logo.png" alt="LeaveRx" className="h-12 w-auto object-contain" />
           </div>
           <p className="text-white/70 text-sm leading-relaxed">
             Medical leave certified. No office visit needed.
