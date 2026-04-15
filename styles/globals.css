@@ -9,7 +9,7 @@
     text-rendering: optimizeLegibility;
   }
   body {
-    @apply font-body text-ink bg-bone;
+    @apply font-body text-bone bg-ink;
     font-size: 17px;
     line-height: 1.65;
     font-feature-settings: "ss01", "cv11";
@@ -26,35 +26,35 @@
   .container-wide { @apply max-w-7xl mx-auto px-6 sm:px-10; }
 
   .eyebrow {
-    @apply inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink/50;
+    @apply inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-bone/50;
   }
   .eyebrow::before {
     content: "";
-    @apply inline-block w-6 h-px bg-ink/30;
+    @apply inline-block w-6 h-px bg-bone/30;
   }
 
   .btn {
     @apply inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-semibold text-[15px] transition-all duration-200;
   }
   .btn-primary {
-    @apply btn bg-ink text-bone hover:bg-teal;
+    @apply btn bg-bone text-ink hover:bg-teal hover:text-bone;
   }
   .btn-secondary {
-    @apply btn bg-transparent text-ink border border-ink/15 hover:border-ink hover:bg-ink hover:text-bone;
+    @apply btn bg-transparent text-bone border border-bone/20 hover:border-bone hover:bg-bone hover:text-ink;
   }
   .btn-ghost {
-    @apply btn text-ink/70 hover:text-ink;
+    @apply btn text-bone/70 hover:text-bone;
   }
 
   .card {
-    @apply bg-bone border border-line rounded-2xl p-7 transition-all duration-300;
+    @apply bg-mist border border-line rounded-2xl p-7 transition-all duration-300;
   }
   .card-hover:hover {
-    @apply border-ink/30 -translate-y-0.5;
+    @apply border-bone/30 -translate-y-0.5;
   }
 
   .rule {
-    @apply border-t border-ink/10;
+    @apply border-t border-bone/10;
   }
 
   .display {
@@ -66,13 +66,12 @@
   }
 
   .num-rule {
-    @apply font-mono text-[11px] tracking-widest text-ink/40 uppercase;
+    @apply font-mono text-[11px] tracking-widest text-bone/40 uppercase;
   }
 
-  /* Subtle grid background */
   .grain {
     background-image:
-      radial-gradient(circle at 1px 1px, rgba(11,18,32,0.06) 1px, transparent 0);
+      radial-gradient(circle at 1px 1px, rgba(245,242,234,0.06) 1px, transparent 0);
     background-size: 28px 28px;
   }
 

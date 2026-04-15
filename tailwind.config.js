@@ -7,16 +7,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        ink: "#0B1220",
-        "ink-2": "#151C2E",
-        bone: "#FAFAF7",
-        mist: "#F1F3EE",
-        sage: "#E7EFE8",
-        "sage-2": "#CDE0D2",
-        teal: "#0F766E",
-        "teal-2": "#14A08F",
+        ink: "#05070B",
+        "ink-2": "#0B0E14",
+        bone: "#F5F2EA",
+        mist: "#0F141C",
+        sage: "#162028",
+        "sage-2": "#1F2D36",
+        teal: "#14B8A6",
+        "teal-2": "#0D9488",
         clay: "#C9B5A4",
-        line: "#E6E3DB",
+        line: "#1C232E",
       },
       fontFamily: {
         heading: ['Syne', 'ui-sans-serif', 'system-ui', 'sans-serif'],

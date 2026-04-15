@@ -2,14 +2,14 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="bg-ink text-bone">
+    <footer className="bg-ink-2 text-bone border-t border-line">
       <div className="container-wide pt-24 pb-10">
         <div className="grid md:grid-cols-12 gap-12">
           <div className="md:col-span-4">
             <div className="bg-bone rounded-2xl inline-block p-5">
               <img src="/logo.png" alt="LeaveRx" className="h-20 w-auto object-contain" />
             </div>
-            <p className="mt-6 text-bone/70 text-[15px] leading-relaxed max-w-xs">
+            <p className="mt-6 text-bone/65 text-[15px] leading-relaxed max-w-xs">
               Physician-signed FMLA certifications, delivered online. Quiet, private, federally recognized.
             </p>
             <div className="mt-8 flex items-center gap-3">
@@ -38,11 +38,11 @@ export default function Footer() {
           ]} />
         </div>
 
-        <div className="mt-20 pt-8 border-t border-bone/10 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-          <p className="text-[11px] text-bone/50 max-w-3xl leading-relaxed">
+        <div className="mt-20 pt-8 border-t border-line flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+          <p className="text-[11px] text-bone/45 max-w-3xl leading-relaxed">
             LeaveRx is a HIPAA-compliant telehealth platform. Physicians on LeaveRx make independent clinical decisions. Certification is not guaranteed and depends on the documented clinical evidence of each case. If your condition cannot be certified, you receive a full refund.
           </p>
-          <p className="text-[11px] text-bone/50">© {new Date().getFullYear()} LeaveRx, Inc.</p>
+          <p className="text-[11px] text-bone/45">© {new Date().getFullYear()} LeaveRx, Inc.</p>
         </div>
       </div>
     </footer>
@@ -56,7 +56,7 @@ function Col({ title, links }) {
       <ul className="mt-5 space-y-3 text-[14px]">
         {links.map(([l, h]) => (
           <li key={l}>
-            <Link href={h} className="text-bone/85 hover:text-bone link-underline">{l}</Link>
+            <Link href={h} className="text-bone/80 hover:text-bone link-underline">{l}</Link>
           </li>
         ))}
       </ul>
