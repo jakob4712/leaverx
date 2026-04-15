@@ -5,11 +5,8 @@ export default function Footer() {
     <footer className="bg-navy text-white mt-24">
       <div className="container-x py-16 grid md:grid-cols-4 gap-10">
         <div>
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center">
-              <span className="text-navy font-heading font-bold">L</span>
-            </div>
-            <span className="font-heading font-bold text-xl">LeaveRx</span>
+          <div className="mb-4 bg-white rounded-xl inline-block p-3">
+            <img src="/logo.png" alt="LeaveRx" className="h-10 w-auto" />
           </div>
           <p className="text-white/70 text-sm leading-relaxed">
             Medical leave certified. No office visit needed.
