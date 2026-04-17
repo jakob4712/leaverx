@@ -1,42 +1,115 @@
 import Link from 'next/link';
-import { Icon } from './Icon';
+import { useState } from 'react';
+import { Menu, X, ChevronDown } from 'lucide-react';
+
+const PROGRAMS = [
+  { slug: 'fmla', name: 'FMLA' },
+  { slug: 'paid-family-leave', name: 'Paid Family Leave' },
+  { slug: 'short-term-disability', name: 'Short-Term Disability' },
+  { slug: 'state-disability', name: 'State Disability (SDI/TDI)' },
+  { slug: 'ada-accommodations', name: 'ADA Accommodations' },
+];
 
 export default function Nav() {
+  const [open, setOpen] = useState(false);
+  const [progOpen, setProgOpen] = useState(false);
   return (
-    <>
-      <div className="bg-ink-2 text-bone/70 text-[12px] border-b border-line">
-        <div className="container-wide py-2.5 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-teal animate-pulse" />
-            <span className="tracking-wide">Same-day FMLA certifications available today</span>
+    <header className="sticky top-0 z-40 bg-cream/90 backdrop-blur-md border-b border-mist">
+      <div className="container-x flex items-center justify-between h-20">
+        <Link href="/" className="flex items-center gap-2 group">
+          <span className="font-display text-2xl font-semibold text-ink">Leave</span>
+          <span className="font-display text-2xl font-semibold text-navy">Rx</span>
+        </Link>
+
+        <nav className="hidden lg:flex items-center gap-8 text-[14.5px] text-slate font-medium">
+          <div
+            className="relative"
+            onMouseEnter={() => setProgOpen(true)}
+            onMouseLeave={() => setProgOpen(false)}
+          >
+            <button className="flex items-center gap-1 hover:text-navy transition py-2">
+              Programs <ChevronDown className="w-3.5 h-3.5" />
+            </button>
+            {progOpen && (
+              <div className="absolute top-full left-0 pt-2 w-72">
+                <div className="bg-paper border border-mist rounded-xl shadow-lift p-2">
+                  {PROGRAMS.map((p) => (
+                    <Link
+                      key={p.slug}
+                      href={`/programs/${p.slug}`}
+                      className="block px-4 py-3 rounded-lg hover:bg-cream text-ink text-[14.5px]"
+                    >
+                      {p.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-          <div className="hidden sm:flex items-center gap-5">
-            <a href="mailto:support@leaverx.co" className="hover:text-bone transition">support@leaverx.co</a>
-            <span className="text-bone/20">|</span>
-            <Link href="/portal" className="hover:text-bone transition">Patient sign in</Link>
-          </div>
-        </div>
-      </div>
-      <header className="sticky top-0 z-40 bg-ink/85 backdrop-blur-xl border-b border-line">
-        <div className="container-wide flex items-center justify-between h-24">
-          <Link href="/" className="flex items-center -my-4">
-            <img src="/logo.png" alt="LeaveRx" className="h-24 md:h-28 w-auto object-contain" />
+          <Link href="/conditions/anxiety" className="hover:text-navy transition">
+            Conditions
           </Link>
-          <nav className="hidden md:flex items-center gap-10 text-[14px] font-medium text-bone/70">
-            <a href="/#how" className="hover:text-bone transition">How it works</a>
-            <a href="/#conditions" className="hover:text-bone transition">Conditions</a>
-            <a href="/#privacy" className="hover:text-bone transition">Privacy</a>
-            <a href="/#pricing" className="hover:text-bone transition">Pricing</a>
-            <a href="/#faq" className="hover:text-bone transition">FAQ</a>
-          </nav>
-          <div className="flex items-center gap-3">
-            <Link href="/portal" className="hidden md:inline-block btn-ghost !py-2.5 !px-3 text-[14px]">Sign in</Link>
-            <Link href="/intake" className="btn-primary !py-3 !px-5 text-[14px]">
-              Start evaluation <Icon name="arrow" className="w-4 h-4" />
+          <Link href="/states/california" className="hover:text-navy transition">
+            States
+          </Link>
+          <Link href="/quiz" className="hover:text-navy transition">
+            Pre-Qualify Free
+          </Link>
+          <Link href="/verify" className="hover:text-navy transition">
+            Verify Cert
+          </Link>
+        </nav>
+
+        <div className="hidden lg:flex items-center gap-3">
+          <Link href="/portal" className="text-slate hover:text-navy text-[14px] font-medium">
+            Sign in
+          </Link>
+          <Link href="/quiz" className="btn-primary !py-2.5 !px-5 text-[14px]">
+            Get Certified
+          </Link>
+        </div>
+
+        <button
+          onClick={() => setOpen((v) => !v)}
+          aria-label="Open menu"
+          className="lg:hidden text-ink"
+        >
+          {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </div>
+
+      {open && (
+        <div className="lg:hidden border-t border-mist bg-cream">
+          <div className="container-x py-6 flex flex-col gap-1">
+            <div className="text-xs font-semibold uppercase text-fog tracking-eyebrow px-2 pb-2">
+              Programs
+            </div>
+            {PROGRAMS.map((p) => (
+              <Link
+                key={p.slug}
+                href={`/programs/${p.slug}`}
+                className="px-2 py-3 text-ink"
+                onClick={() => setOpen(false)}
+              >
+                {p.name}
+              </Link>
+            ))}
+            <div className="h-px bg-mist my-2" />
+            <Link href="/quiz" className="px-2 py-3 text-ink" onClick={() => setOpen(false)}>
+              Pre-Qualify Free
+            </Link>
+            <Link href="/verify" className="px-2 py-3 text-ink" onClick={() => setOpen(false)}>
+              Verify Certification
+            </Link>
+            <Link href="/portal" className="px-2 py-3 text-ink" onClick={() => setOpen(false)}>
+              Sign in
+            </Link>
+            <Link href="/quiz" className="btn-primary mt-3 justify-center" onClick={() => setOpen(false)}>
+              Get Certified
             </Link>
           </div>
         </div>
-      </header>
-    </>
+      )}
+    </header>
   );
 }
