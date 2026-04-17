@@ -5,6 +5,31 @@ import StackedBar from './StackedBar';
 import DataNumber from './DataNumber';
 import { STATES, evaluate, summary, tenureLabel } from '@/lib/eligibilityLogic';
 
+// Illustrative default shown before the user touches any input.
+// Based on a typical California employee with a qualifying condition.
+const DEFAULT_RESULTS = {
+  fmla: {
+    status: 'likely',
+    why: 'Most full-time employees at companies with 50+ staff qualify. Fill in the form to confirm.',
+  },
+  pfl: {
+    status: 'likely',
+    why: 'Available in 11 states + DC. Select your state to see if paid family leave applies.',
+  },
+  std: {
+    status: 'likely',
+    why: 'Most employers offer short-term disability; 5 states run their own programs.',
+  },
+  sdi: {
+    status: 'likely',
+    why: 'State-run disability insurance in CA, NY, NJ, HI, RI. Select your state to check.',
+  },
+  ada: {
+    status: 'likely',
+    why: 'The ADA covers most U.S. employees with qualifying conditions — remote work, reduced hours, modified duties.',
+  },
+};
+
 const WHO = [
   { v: 'me', l: 'Me' },
   { v: 'spouse', l: 'My spouse' },
@@ -40,7 +65,9 @@ export default function Tool01() {
     [who, state, hours, tenure, employer, conditions]
   );
   const deferred = useDeferredValue(inputs);
-  const results = useMemo(() => evaluate(deferred), [deferred]);
+  const hasInputs = !!(state || employer || conditions.length > 0);
+  const evaluated = useMemo(() => evaluate(deferred), [deferred]);
+  const results = hasInputs ? evaluated : { ...evaluated, ...DEFAULT_RESULTS };
   const sum = useMemo(() => summary(results, deferred), [results, deferred]);
 
   const toggleCondition = (c) =>
@@ -53,14 +80,14 @@ export default function Tool01() {
           {/* LEFT — INPUT PANEL */}
           <div>
             <div className="spec text-bureau">
-              Eligibility Check / No Account Required
+              Live Eligibility Check · Free · No Account Required
             </div>
-            <h1 className="mt-5 text-ink leading-[1.05]" style={{ fontSize: 'clamp(2.2rem, 5vw, 4.2rem)' }}>
-              See every <span className="display-italic text-bureau">protection</span><br />
+            <h2 className="mt-5 text-ink leading-[1.05]" style={{ fontSize: 'clamp(2rem, 4.5vw, 3.6rem)', fontWeight: 600 }}>
+              See every <span className="display-italic text-bureau">protection</span>{' '}
               you qualify for.
-            </h1>
-            <p className="mt-6 text-graphite text-[17px] leading-relaxed max-w-xl">
-              FMLA, paid family leave, short-term disability, ADA accommodations. Most employees qualify for 3+ programs at once. Check yours in 30 seconds.
+            </h2>
+            <p className="mt-5 text-graphite text-[16.5px] leading-relaxed max-w-xl">
+              Adjust the fields below — your eligibility updates as you go. Most employees qualify for 3+ programs at once.
             </p>
 
             <div className="mt-10 space-y-8">
@@ -203,26 +230,45 @@ export default function Tool01() {
 
             {/* Total bar + numbers */}
             <div className="mt-8 card-paper p-6">
-              <div className="spec">Total Protected Time Available</div>
-              <div className="mt-2 flex items-end gap-3">
-                <DataNumber
-                  value={sum.totalWeeks}
-                  className="text-[56px] leading-none text-ink font-mono"
-                />
-                <span className="num text-[14px] text-ash mb-2">weeks total</span>
-              </div>
-              <div className="mt-5">
-                <StackedBar
-                  fmlaWeeks={sum.fmlaWeeks}
-                  pflWeeks={sum.pflWeeks}
-                  stdWeeks={sum.stdWeeks}
-                  max={Math.max(52, sum.totalWeeks + 4)}
-                />
-              </div>
+              {hasInputs ? (
+                <>
+                  <div className="spec">Total Protected Time Available</div>
+                  <div className="mt-2 flex items-end gap-3">
+                    <DataNumber
+                      value={sum.totalWeeks}
+                      className="text-[56px] leading-none text-ink font-mono"
+                    />
+                    <span className="num text-[14px] text-ash mb-2">weeks total</span>
+                  </div>
+                  <div className="mt-5">
+                    <StackedBar
+                      fmlaWeeks={sum.fmlaWeeks}
+                      pflWeeks={sum.pflWeeks}
+                      stdWeeks={sum.stdWeeks}
+                      max={Math.max(52, sum.totalWeeks + 4)}
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="spec">
+                    Example · California · 12 months tenure · Mental health
+                  </div>
+                  <div className="mt-3 text-ink text-[18px] leading-snug">
+                    Up to <span className="num font-semibold text-bureau">46 weeks</span> of protected time:
+                  </div>
+                  <div className="mt-5">
+                    <StackedBar fmlaWeeks={12} pflWeeks={8} stdWeeks={26} max={52} />
+                  </div>
+                  <div className="mt-4 text-[12.5px] text-ash italic">
+                    Your actual total depends on your specific state, employer, and condition.
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Income estimate */}
-            {(sum.monthlyPfl > 0 || sum.monthlyStd > 0) && (
+            {hasInputs && (sum.monthlyPfl > 0 || sum.monthlyStd > 0) && (
               <div className="mt-4 card-paper p-6">
                 <div className="spec">Estimated Wage Replacement</div>
                 <div className="mt-3 space-y-2 text-[14px]">
