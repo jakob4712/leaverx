@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, Star } from 'lucide-react';
 import { buildMatrix, PROGRAMS } from '@/lib/stateProgramMatrix';
 
@@ -8,8 +9,8 @@ const POWER_STATES = new Set(['CA', 'NY', 'NJ', 'HI', 'RI']);
 export default function Tool02() {
   const matrix = useMemo(buildMatrix, []);
   const [filter, setFilter] = useState('');
-  const [sort, setSort] = useState('alpha'); // "alpha" | "most"
-  const [active, setActive] = useState(null); // abbr
+  const [sort, setSort] = useState('alpha');
+  const [active, setActive] = useState(null);
 
   const visible = useMemo(() => {
     const filtered = matrix.filter(
@@ -25,6 +26,28 @@ export default function Tool02() {
   }, [matrix, filter, sort]);
 
   const activeRow = active ? matrix.find((r) => r.abbr === active) : null;
+
+  // ESC closes drawer
+  useEffect(() => {
+    if (!active) return;
+    const onKey = (e) => {
+      if (e.key === 'Escape') setActive(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [active]);
+
+  // Lock scroll on mobile when drawer is open
+  useEffect(() => {
+    if (!active) return;
+    const mq = window.matchMedia('(max-width: 1023px)');
+    if (mq.matches) {
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = '';
+      };
+    }
+  }, [active]);
 
   return (
     <section id="tool-02" className="bg-shelf border-b border-rule">
@@ -76,7 +99,6 @@ export default function Tool02() {
         <div className="mt-6 grid lg:grid-cols-12 gap-6">
           <div className="lg:col-span-8">
             <div className="bg-cardstock border border-rule rounded-sm overflow-hidden">
-              {/* Header */}
               <div
                 className="grid bg-cardstock border-b border-rule"
                 style={{ gridTemplateColumns: '110px repeat(5, 1fr)' }}
@@ -130,90 +152,165 @@ export default function Tool02() {
             </div>
           </div>
 
-          {/* Side drawer */}
-          <aside className="lg:col-span-4">
-            <div className="bg-cardstock border border-rule rounded-sm p-6 lg:sticky lg:top-20">
-              {!activeRow ? (
-                <div className="py-8">
-                  <div className="spec">Select a state</div>
-                  <p className="mt-3 text-[14px] text-graphite leading-relaxed">
-                    Click any row to see exactly which programs stack for that state, with a direct path to begin evaluation.
-                  </p>
-                  <div className="mt-6">
-                    <div className="spec">Power states (5/5 programs)</div>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {['CA', 'NY', 'NJ', 'HI', 'RI'].map((s) => {
-                        const row = matrix.find((r) => r.abbr === s);
-                        return (
-                          <button
-                            key={s}
-                            onClick={() => setActive(s)}
-                            className="pill-bureau hover:bg-bureau hover:text-paper transition-colors"
-                          >
-                            {row?.name}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div>
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <div className="spec">{activeRow.abbr}</div>
-                      <div className="display-italic text-ink text-[24px] mt-1 leading-tight">
-                        {activeRow.name}
-                      </div>
-                      <div className="mt-2 spec text-bureau">
-                        {countProtections(activeRow)} / 5 protections available
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => setActive(null)}
-                      aria-label="Close"
-                      className="text-ash hover:text-ink"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  <div className="mt-6 space-y-3">
-                    {PROGRAMS.map((p) => {
-                      const cell = activeRow.cells[p];
-                      return (
-                        <div key={p} className="border-t border-rule pt-3">
-                          <div className="flex items-baseline justify-between gap-3">
-                            <div className="font-body font-semibold text-[14px] text-ink">{p}</div>
-                            <div className="num text-[11px] text-ash">{cell.label}</div>
-                          </div>
-                          <p className="mt-1.5 text-[13px] text-graphite leading-relaxed">
-                            {cell.detail}
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  <Link
-                    href={`/intake?state=${activeRow.abbr}`}
-                    className="btn-bureau w-full mt-6 justify-center"
+          {/* Desktop drawer — sticky, contents fade/slide on change */}
+          <aside className="hidden lg:block lg:col-span-4">
+            <div className="bg-cardstock border border-rule rounded-sm p-6 sticky top-20 min-h-[400px] relative overflow-hidden">
+              <AnimatePresence mode="wait">
+                {!activeRow ? (
+                  <motion.div
+                    key="placeholder"
+                    initial={{ opacity: 0, x: 12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -12 }}
+                    transition={{ duration: 0.22 }}
+                    className="py-8"
                   >
-                    Begin Evaluation in {activeRow.abbr} → $149
-                  </Link>
-                  <Link
-                    href={`/states/${activeRow.name.toLowerCase().replace(/\s+/g, '-')}`}
-                    className="block text-center spec mt-3 text-bureau hover:underline"
+                    <PlaceholderPanel matrix={matrix} onSelect={setActive} />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key={activeRow.abbr}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.25, ease: 'easeOut' }}
                   >
-                    See full {activeRow.name} guide →
-                  </Link>
-                </div>
-              )}
+                    <StateDetail row={activeRow} onClose={() => setActive(null)} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </aside>
         </div>
+
+        {/* Mobile bottom-sheet drawer — slide up from bottom */}
+        <AnimatePresence>
+          {activeRow && (
+            <MobileDrawer
+              row={activeRow}
+              onClose={() => setActive(null)}
+              key="mobile-drawer"
+            />
+          )}
+        </AnimatePresence>
       </div>
     </section>
+  );
+}
+
+function MobileDrawer({ row, onClose }) {
+  const panelRef = useRef(null);
+
+  // Click-outside to close
+  useEffect(() => {
+    const onClick = (e) => {
+      if (panelRef.current && !panelRef.current.contains(e.target)) {
+        onClose();
+      }
+    };
+    const t = setTimeout(() => document.addEventListener('mousedown', onClick), 0);
+    return () => {
+      clearTimeout(t);
+      document.removeEventListener('mousedown', onClick);
+    };
+  }, [onClose]);
+
+  return (
+    <div className="lg:hidden fixed inset-0 z-50 flex items-end">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+        className="absolute inset-0 bg-ink/40 backdrop-blur-sm"
+      />
+      <motion.div
+        ref={panelRef}
+        initial={{ y: '100%' }}
+        animate={{ y: 0 }}
+        exit={{ y: '100%' }}
+        transition={{ type: 'spring', damping: 30, stiffness: 240 }}
+        className="relative w-full bg-cardstock border-t border-rule rounded-t-xl p-6 max-h-[85vh] overflow-y-auto"
+      >
+        <div className="mx-auto mb-4 w-10 h-1 bg-rule rounded-full" />
+        <StateDetail row={row} onClose={onClose} />
+      </motion.div>
+    </div>
+  );
+}
+
+function StateDetail({ row, onClose }) {
+  return (
+    <div>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="spec">{row.abbr}</div>
+          <div className="display-italic text-ink text-[24px] mt-1 leading-tight">{row.name}</div>
+          <div className="mt-2 spec text-bureau">
+            {countProtections(row)} / 5 protections available
+          </div>
+        </div>
+        <button onClick={onClose} aria-label="Close" className="text-ash hover:text-ink">
+          <X className="w-4 h-4" />
+        </button>
+      </div>
+
+      <div className="mt-6 space-y-3">
+        {PROGRAMS.map((p) => {
+          const cell = row.cells[p];
+          return (
+            <div key={p} className="border-t border-rule pt-3">
+              <div className="flex items-baseline justify-between gap-3">
+                <div className="font-body font-semibold text-[14px] text-ink">{p}</div>
+                <div className="num text-[11px] text-ash">{cell.label}</div>
+              </div>
+              <p className="mt-1.5 text-[13px] text-graphite leading-relaxed">{cell.detail}</p>
+            </div>
+          );
+        })}
+      </div>
+
+      <Link
+        href={`/intake?state=${row.abbr}`}
+        className="btn-bureau w-full mt-6 justify-center"
+      >
+        Begin Evaluation in {row.abbr} → $149
+      </Link>
+      <Link
+        href={`/states/${row.name.toLowerCase().replace(/\s+/g, '-')}`}
+        className="block text-center spec mt-3 text-bureau hover:underline"
+      >
+        See full {row.name} guide →
+      </Link>
+    </div>
+  );
+}
+
+function PlaceholderPanel({ matrix, onSelect }) {
+  return (
+    <>
+      <div className="spec">Select a state</div>
+      <p className="mt-3 text-[14px] text-graphite leading-relaxed">
+        Click any row to see exactly which programs stack for that state, with a direct path to begin evaluation. Press <span className="spec">ESC</span> to close.
+      </p>
+      <div className="mt-6">
+        <div className="spec">Power states (5/5 programs)</div>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {['CA', 'NY', 'NJ', 'HI', 'RI'].map((s) => {
+            const row = matrix.find((r) => r.abbr === s);
+            return (
+              <button
+                key={s}
+                onClick={() => onSelect(s)}
+                className="pill-bureau hover:bg-bureau hover:text-paper transition-colors"
+              >
+                {row?.name}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </>
   );
 }
 
