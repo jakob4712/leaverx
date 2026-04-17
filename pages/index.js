@@ -4,6 +4,7 @@ import ScrollProgress from '@/components/ScrollProgress';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import MobileStickyBar from '@/components/MobileStickyBar';
+import HeroNarrative from '@/components/HeroNarrative';
 import Tool01 from '@/components/Tool01_EligibilityCalculator';
 import Tool02 from '@/components/Tool02_ProgramMatrix';
 import Tool03 from '@/components/Tool03_Timeline';
@@ -23,7 +24,8 @@ export default function Home() {
       <LenisProvider>
         <ScrollProgress />
         <Nav />
-        <main>
+        <main className="pb-24 md:pb-0">
+          <HeroNarrative />
           <Tool01 />
           <Tool02 />
           <Tool03 />
