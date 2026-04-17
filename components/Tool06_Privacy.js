@@ -22,6 +22,9 @@ export default function Tool06() {
         <h2 className="mt-3 text-ink leading-tight" style={{ fontSize: 'clamp(2rem, 4vw, 3.2rem)' }}>
           Your employer doesn&apos;t see what we see.
         </h2>
+        <p className="mt-4 text-graphite text-[16px] max-w-2xl leading-relaxed">
+          What you tell our physicians is protected by federal medical privacy law. Your employer never sees the conversation — only the final certification form they need to approve your leave.
+        </p>
 
         <div className="mt-12 grid lg:grid-cols-2 gap-10">
           {/* Diagram */}

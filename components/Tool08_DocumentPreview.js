@@ -18,6 +18,9 @@ export default function Tool08() {
         <h2 className="mt-3 text-ink leading-tight" style={{ fontSize: 'clamp(2rem, 4vw, 3.2rem)' }}>
           What lands in your inbox.
         </h2>
+        <p className="mt-4 text-graphite text-[16px] max-w-2xl leading-relaxed">
+          Every document is pre-filled to meet federal and state compliance requirements. You don&apos;t fill anything out — you download, and your HR gets what they need.
+        </p>
 
         {/* Tabs */}
         <div className="mt-10 flex flex-wrap gap-2 border-b border-rule">
