@@ -9,85 +9,81 @@
     text-rendering: optimizeLegibility;
   }
   body {
-    @apply font-body text-bone bg-ink;
+    @apply font-body text-ink bg-cream;
     font-size: 17px;
-    line-height: 1.65;
-    font-feature-settings: "ss01", "cv11";
+    line-height: 1.6;
   }
   h1, h2, h3, h4 {
-    @apply font-heading tracking-display;
-    font-weight: 600;
+    @apply font-display text-ink;
+    font-weight: 500;
+    letter-spacing: -0.01em;
   }
-  ::selection { background: #0F766E; color: #fff; }
+  ::selection { background: #1E3A5F; color: #fff; }
 }
 
 @layer components {
   .container-x { @apply max-w-6xl mx-auto px-6 sm:px-10; }
-  .container-wide { @apply max-w-7xl mx-auto px-6 sm:px-10; }
+  .container-narrow { @apply max-w-3xl mx-auto px-6 sm:px-10; }
 
   .eyebrow {
-    @apply inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-bone/50;
-  }
-  .eyebrow::before {
-    content: "";
-    @apply inline-block w-6 h-px bg-bone/30;
+    @apply inline-block text-[12px] font-semibold uppercase text-fog;
+    letter-spacing: 0.16em;
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-semibold text-[15px] transition-all duration-200;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-200 px-6 py-3.5 text-[15px];
   }
   .btn-primary {
-    @apply btn bg-bone text-ink hover:bg-teal hover:text-bone;
+    @apply btn bg-navy text-white hover:bg-navy-deep;
   }
   .btn-secondary {
-    @apply btn bg-transparent text-bone border border-bone/20 hover:border-bone hover:bg-bone hover:text-ink;
+    @apply btn bg-paper text-navy border border-navy hover:bg-navy-soft;
   }
   .btn-ghost {
-    @apply btn text-bone/70 hover:text-bone;
+    @apply btn text-navy hover:bg-navy-soft;
+  }
+  .btn-lg {
+    @apply px-8 py-4 text-base;
   }
 
   .card {
-    @apply bg-mist border border-line rounded-2xl p-7 transition-all duration-300;
+    @apply bg-paper border border-mist rounded-xl p-6 transition-all duration-200 shadow-soft;
   }
   .card-hover:hover {
-    @apply border-bone/30 -translate-y-0.5;
+    @apply border-navy-soft shadow-lift -translate-y-0.5;
   }
 
-  .rule {
-    @apply border-t border-bone/10;
+  .pill {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-navy-soft text-navy-deep text-[12px] font-semibold px-3.5 py-1.5;
+  }
+  .pill-sm {
+    @apply inline-flex items-center gap-1 rounded-full bg-navy-soft text-navy-deep text-[11px] font-semibold px-2.5 py-0.5;
   }
 
-  .display {
-    @apply font-heading tracking-display font-semibold;
+  .field-label {
+    @apply block text-sm font-medium text-slate;
+  }
+  .field-input {
+    @apply mt-1.5 w-full rounded-lg border border-mist bg-paper px-4 py-3.5 text-ink placeholder:text-fog focus:outline-none focus:border-navy focus:shadow-ring transition;
   }
 
-  .hair {
-    @apply border-line;
+  .link-soft {
+    @apply text-navy underline decoration-navy/30 underline-offset-4 hover:decoration-navy transition;
   }
 
-  .num-rule {
-    @apply font-mono text-[11px] tracking-widest text-bone/40 uppercase;
+  .divider {
+    @apply h-px w-full bg-mist;
   }
-
-  .grain {
-    background-image:
-      radial-gradient(circle at 1px 1px, rgba(245,242,234,0.06) 1px, transparent 0);
-    background-size: 28px 28px;
-  }
-
-  .link-underline {
-    @apply relative inline-block;
-    background-image: linear-gradient(currentColor, currentColor);
-    background-position: 0 100%;
-    background-repeat: no-repeat;
-    background-size: 100% 1px;
-    padding-bottom: 1px;
-    transition: background-size .3s ease;
-  }
-  .link-underline:hover { background-size: 0 1px; }
 }
 
 @layer utilities {
   .text-balance { text-wrap: balance; }
   .text-pretty { text-wrap: pretty; }
 }
+
+/* Animated pulse dot */
+@keyframes soft-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.6; }
+}
+.dot-pulse { animation: soft-pulse 1.8s ease-in-out infinite; }
