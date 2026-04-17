@@ -4,75 +4,116 @@
 
 @layer base {
   html {
-    scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
   body {
-    @apply font-body text-ink bg-cream;
+    @apply font-body text-ink bg-paper;
     font-size: 17px;
     line-height: 1.6;
+    font-feature-settings: "ss01", "cv11";
   }
-  h1, h2, h3, h4 {
-    @apply font-display text-ink;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-  }
-  ::selection { background: #1E3A5F; color: #fff; }
+  ::selection { background: #1E3A5F; color: #FAFAF7; }
 }
 
 @layer components {
-  .container-x { @apply max-w-6xl mx-auto px-6 sm:px-10; }
+  .container-x { @apply max-w-7xl mx-auto px-6 sm:px-10; }
   .container-narrow { @apply max-w-3xl mx-auto px-6 sm:px-10; }
 
-  .eyebrow {
-    @apply inline-block text-[12px] font-semibold uppercase text-fog;
-    letter-spacing: 0.16em;
+  /* Typographic primitives */
+  .spec {
+    @apply font-mono uppercase text-spec text-ash tracking-spec;
+  }
+  .display-italic {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
   }
 
-  .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-200 px-6 py-3.5 text-[15px];
+  /* Buttons — institutional rectangles, not pills */
+  .btn-bureau {
+    @apply inline-flex items-center justify-center gap-2 bg-bureau text-paper font-mono uppercase tracking-spec text-[12px] px-6 py-4 rounded-sm hover:bg-bureau-deep transition-colors;
   }
-  .btn-primary {
-    @apply btn bg-navy text-white hover:bg-navy-deep;
-  }
-  .btn-secondary {
-    @apply btn bg-paper text-navy border border-navy hover:bg-navy-soft;
+  .btn-bureau-lg {
+    @apply inline-flex items-center justify-center gap-3 bg-bureau text-paper font-mono uppercase tracking-spec text-[13px] px-8 py-5 rounded-sm hover:bg-bureau-deep transition-colors;
   }
   .btn-ghost {
-    @apply btn text-navy hover:bg-navy-soft;
+    @apply inline-flex items-center justify-center gap-2 bg-transparent text-bureau font-mono uppercase tracking-spec text-[12px] px-5 py-3 hover:bg-bureau-soft transition-colors rounded-sm;
   }
-  .btn-lg {
-    @apply px-8 py-4 text-base;
+  .btn-paper-on-bureau {
+    @apply inline-flex items-center justify-center gap-2 bg-bureau-deep text-paper border border-paper/30 font-mono uppercase tracking-spec text-[12px] px-6 py-4 rounded-sm hover:bg-paper hover:text-bureau-deep hover:border-paper transition-colors;
   }
 
+  /* Cards */
   .card {
-    @apply bg-paper border border-mist rounded-xl p-6 transition-all duration-200 shadow-soft;
+    @apply bg-cardstock border border-rule rounded-sm p-6;
   }
-  .card-hover:hover {
-    @apply border-navy-soft shadow-lift -translate-y-0.5;
+  .card-paper {
+    @apply bg-cardstock border border-rule rounded-sm shadow-paperlift;
   }
 
+  /* Pills */
   .pill {
-    @apply inline-flex items-center gap-1.5 rounded-full bg-navy-soft text-navy-deep text-[12px] font-semibold px-3.5 py-1.5;
+    @apply inline-flex items-center gap-1.5 font-mono uppercase tracking-spec text-[10px] px-2.5 py-1 rounded-sm;
   }
-  .pill-sm {
-    @apply inline-flex items-center gap-1 rounded-full bg-navy-soft text-navy-deep text-[11px] font-semibold px-2.5 py-0.5;
+  .pill-bureau { @apply pill bg-bureau-soft text-bureau-deep; }
+  .pill-stamp { @apply pill bg-stamp-soft text-stamp; }
+  .pill-seal { @apply pill bg-seal-soft text-seal; }
+  .pill-alarm { @apply pill bg-alarm-soft text-alarm; }
+  .pill-fog { @apply pill bg-shelf text-ash; }
+
+  /* Form fields — borderless underline style */
+  .input-line {
+    @apply w-full bg-transparent border-0 border-b border-rule px-0 py-3 text-ink placeholder:text-fog focus:outline-none focus:border-bureau focus:bg-shelf/40 transition-colors;
+  }
+  .input-shelf {
+    @apply w-full bg-shelf border border-rule rounded-sm px-4 py-3 text-ink placeholder:text-fog focus:outline-none focus:border-bureau focus:shadow-ring transition;
+  }
+  .field-spec {
+    @apply spec block mb-2;
   }
 
-  .field-label {
-    @apply block text-sm font-medium text-slate;
+  /* Sliders */
+  .slider {
+    @apply w-full appearance-none bg-transparent;
   }
-  .field-input {
-    @apply mt-1.5 w-full rounded-lg border border-mist bg-paper px-4 py-3.5 text-ink placeholder:text-fog focus:outline-none focus:border-navy focus:shadow-ring transition;
+  .slider::-webkit-slider-runnable-track {
+    @apply h-[2px] bg-rule rounded-full;
+  }
+  .slider::-webkit-slider-thumb {
+    @apply appearance-none w-4 h-4 bg-bureau rounded-full -mt-[7px] cursor-pointer;
+  }
+  .slider::-moz-range-track { @apply h-[2px] bg-rule rounded-full; }
+  .slider::-moz-range-thumb { @apply w-4 h-4 bg-bureau rounded-full border-0 cursor-pointer; }
+
+  /* Hairline rule */
+  .hairline { @apply h-px w-full bg-rule; }
+  .hairline-bold { @apply h-px w-full bg-rule-bold; }
+
+  /* Mono number style */
+  .num {
+    @apply font-mono tabular-nums;
   }
 
-  .link-soft {
-    @apply text-navy underline decoration-navy/30 underline-offset-4 hover:decoration-navy transition;
+  /* Section header pattern */
+  .tool-label {
+    @apply spec inline-flex items-center gap-2 text-bureau;
+  }
+  .tool-label::before {
+    content: "";
+    @apply inline-block w-6 h-px bg-bureau;
   }
 
-  .divider {
-    @apply h-px w-full bg-mist;
+  /* Dotted leader for table-of-contents lists */
+  .leader {
+    background-image: radial-gradient(circle, currentColor 1px, transparent 1.5px);
+    background-position: bottom;
+    background-size: 8px 2px;
+    background-repeat: repeat-x;
+  }
+
+  .link-ink {
+    @apply text-ink underline decoration-rule decoration-1 underline-offset-4 hover:decoration-bureau transition;
   }
 }
 
@@ -81,9 +122,9 @@
   .text-pretty { text-wrap: pretty; }
 }
 
-/* Animated pulse dot */
-@keyframes soft-pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.4); opacity: 0.6; }
+/* Animations */
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
 }
-.dot-pulse { animation: soft-pulse 1.8s ease-in-out infinite; }
+.animate-pulse-soft { animation: pulse-soft 2s ease-in-out infinite; }
